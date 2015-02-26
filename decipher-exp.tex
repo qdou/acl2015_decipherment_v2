@@ -61,13 +61,7 @@ Motivated by the previous work, we use multiple random restarts and an iterative
   \item Repeat until $t=1$.
 \end{itemize}
 
-In our Spanish-English decipherment experiments, we use 10 different random starts. In experiments, we also use a higher base distribution weight as more ciphtertext becomes available. We set the weight to 2, 10, and 50 for ciphertexts with 100k, 1 million, and 10 million tokens respectively. 
-
-\subsection{Evaluation Metrics}
-
-We use top-5 type accuracy as our evaluation metric.  Given a word type $f$ in Spanish, we find top-5 translation pairs $(f,e)$ ranked by $P(e|f)$ from the learned decipherent translation table. If any pair $(f,e)$ can also be found in a gold translation lexicon $T_{gold}$, we treat the word type $f$ as correctly deciphered. Let $|C|$ be the number of word types correctly deciphered, and $|V|$ be the total number of word types evaluated. We define type accuracy as $\frac{|C|}{|V|}$.
-
-To create $T_{gold}$, we use GIZA to align a small amount of Spanish-English parallel text (1 million tokens for each language), and use the lexicon derived from the alignment as our gold translation lexicon. $T_{gold}$ contains a subset of 4233 word types in the top 5000 frequent word types, and 7479 word types in the top 10k frequent word types. We decipher the 10k most frequent Spanish word types to the 10k most frequent English word types, and evaluate decipherment accuracy on both the 5k most frequent word types as well as the full 10k word types.
+The second step consists of sampling and learning of similarity matrix $M$. The sampling process  creates training examples for learning $M$, and the new $M$ is used to update base distribution for future sampling process. In our Spanish-English decipherment experiments, we use 10 different random starts. In experiments, we also use a higher base distribution weight as more ciphtertext becomes available. We set the weight to 2, 10, and 50 for ciphertexts with 100k, 1 million, and 10 million tokens respectively. 
 
 \section{Deciphering Malagasy}
 \label{decipher_malagasy}
@@ -149,6 +143,8 @@ We use the same sampling protocol designed for Spanish-English decipherment. How
 Compared with Spanish-English decipherment, we find the base distribution plays a more important role in achieving higher decipherment accuracy for Malagasy-English. Therefore, we set weight to 10, 100, and 500 when deciphering 100k, 1 million, and 20 million token ciphtertexts, respectively.
 
 
+\section{Results}
+
 %
  \begin{table*}[!ht]
  \begin{center}
@@ -166,9 +162,13 @@ Compared with Spanish-English decipherment, we find the base distribution plays 
  \end{table*}
 %
 
-\section{Results}
+In this section, we first compare decipherment accuracy of the baseline with our new approach, at various ciphertext sizes. Then, we evaluate the quality of the base distribution learned during decipherment.
 
-In experiments, we compare decipherment accuracy of the baseline with our new approach, at various ciphertext sizes. We evaluate accuracy for the 5k and 10k most frequent word types for each language pair, and present them in Table~\ref{decipher-acc-result}.
+We use top-5 type accuracy as our evaluation metric.  Given a word type $f$ in Spanish, we find top-5 translation pairs $(f,e)$ ranked by $P(e|f)$ from the learned decipherent translation table. If any pair $(f,e)$ can also be found in a gold translation lexicon $T_{gold}$, we treat the word type $f$ as correctly deciphered. Let $|C|$ be the number of word types correctly deciphered, and $|V|$ be the total number of word types evaluated. We define type accuracy as $\frac{|C|}{|V|}$.
+
+To create $T_{gold}$, we use GIZA to align a small amount of Spanish-English parallel text (1 million tokens for each language), and use the lexicon derived from the alignment as our gold translation lexicon. $T_{gold}$ contains a subset of 4233 word types in the top 5000 frequent word types, and 7479 word types in the top 10k frequent word types. We decipher the 10k most frequent Spanish word types to the 10k most frequent English word types, and evaluate decipherment accuracy on both the 5k most frequent word types as well as the full 10k word types.
+
+ We evaluate accuracy for the 5k and 10k most frequent word types for each language pair, and present them in Table~\ref{decipher-acc-result}.
 
 
  \begin{figure}[!ht]
@@ -189,4 +189,4 @@ We also present the learning curves of decipherment accuracy for 5k most frequen
 
 Figure \ref{mlg-en-curve} compares the baseline with our new approach in deciphering Malagasy into English. With 100k tokens of data, the baseline achieves 1.2\% accuracy, while the new system achieves 2.4\% accuracy.  We observe consistent improvement throughout the experiment. In the end, the baseline accuracy climbs to 5.8\%, while the new system improves it to 11.2\%.
 
-Overall, the improvement we achieved is solid, and is observed across different language pairs. When we examine the base distribution, we find that the correct translations have higher probability. This helps prevent the language model driving deicpherment to a wrong direction.
+Overall, the improvement we achieved is solid, and is observed across different language pairs. We hypothesize the gain comes from a better base distribution that considers larger context information. This helps prevent the language model driving deicpherment to a wrong direction. We evaluate the base distribution with the same translation table we use for evaluation decipherment accuracy. For each cipher word type $f$, if any of its translation $e$ with score $P(e|f) > 0.1$ appears in the top K candidates proposed by the base distribution, we increase correct count by 1. We evaluate base distribution learned during Spanish-English decipherment. The total number of evaluable word types is 7469. With 100k cipher tokens, 5416 are correct, with 10m cipher tokens, 6123 are correct.
