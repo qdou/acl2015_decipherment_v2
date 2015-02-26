@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2014)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: index.aux
+The style file: acl.bst
+Database file #1: ref.bib
+Warning--empty chapter and pages in Weaver:1955
+You've used 25 entries,
+            2490 wiz_defined-function locations,
+            684 strings with 9699 characters,
+and the built_in function-call counts, 8846 in all, are:
+= -- 918
+> -- 360
+< -- 0
++ -- 119
+- -- 116
+* -- 570
+:= -- 1472
+add.period$ -- 117
+call.type$ -- 25
+change.case$ -- 157
+chr.to.int$ -- 23
+cite$ -- 26
+duplicate$ -- 429
+empty$ -- 743
+format.name$ -- 151
+if$ -- 1882
+int.to.chr$ -- 3
+int.to.str$ -- 0
+missing$ -- 26
+newline$ -- 152
+num.names$ -- 75
+pop$ -- 222
+preamble$ -- 1
+purify$ -- 183
+quote$ -- 0
+skip$ -- 259
+stack$ -- 0
+substring$ -- 126
+swap$ -- 69
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 196
+warning$ -- 1
+while$ -- 50
+width$ -- 30
+write$ -- 345
+(There was 1 warning)

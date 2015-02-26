@@ -1,0 +1,53 @@
+\documentclass[11pt]{article}
+\usepackage{acl2015}
+\usepackage{times}
+\usepackage{hhline}
+\usepackage{pbox}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\setlist{nosep}
+
+\input{defs}
+%\linespread{2}
+
+%\doublespacing
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\setlength\titlebox{6.5cm}    % Expanding the titlebox
+
+\title{Decipherment with Word Embeddings through Multinomial Regression}
+
+%\author{Qing Dou, Ashish Vaswani, Kevin Knight, and Chris Dyer \\
+%  Information Sciences Institute \\Department of Computer Science\\
+%  University of Southern California \\
+%  {\tt \{qdou,knight\}@isi.edu} \\}  
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+We introduce into Bayesian decipherment a base distribution derived from similarities of word embeddings. We integrate learning of embedding similarities with decipherment in a stochastic EM process. Experimental results show that the base distribution is highly beneficial to decipherment, improving the state-of-the-art decipherment accuracy from 29.0\% to 59.0\% for Spanish/English, 5.1\% to 11.2\% for Malagasy/English. 
+\end{abstract}
+
+\input{intro}
+\input{bg}
+\input{dmr_embeddings}
+%\input{method}
+%\input{embeddings}
+\input{decipher-exp}
+\input{conclusion}
+\input{ack}
+
+
+
+\bibliography{ref}
+\bibliographystyle{acl}
+
+\end{document}

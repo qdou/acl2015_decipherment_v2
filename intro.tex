@@ -1,0 +1,19 @@
+\section{Introduction}
+
+Tremendous advances in Machine Translation (MT) have been made since we began applying automatic learning techniques to learn translation rules automatically from parallel data. However, the reliance on parallel data also limits development and application of high-quality MT systems, as the amount of parallel data is far from adequate in low-density languages and domains.
+
+In general, it is easier to obtain non-parallel monolingual data. The ability to learn translations from monolingual data can alleviate obstacles caused by insufficient parallel data.  Motivated by this idea, researchers have proposed different approaches to tackle this problem, which can be largely divided into two groups. The first group is based on the idea proposed by \newcite{Rapp:1995}, where words are represented as context vectors, and two words are likely to be translations if their context vectors are similar. Initially, the vectors contained only context words. Later extensions introduced more features \cite{haghighi-EtAl:2008:ACLMain,Garera:2009,Bergsma:2011,Daume:2011:DAM:2002736.2002819,irvine-callisonburch:2013,irvine-callisonburch:2013:WMT}, and used more abstract representation such as word embeddings \cite{KlementievCOLING}.
+
+Another promising approach to solve this problem is through decipherment. It has drawn significant amounts of interest in the past few years \cite{ravi-knight:2011,Nuhn:2012,dou-knight:2013:EMNLP,ravi:2013} and has been shown to improve end-to-end translation. Decipherment views a foreign language as a cipher for English and finds a translation table that converts foreign texts into sensible English. 
+
+Both approaches have been shown to improve quality of MT systems for domain adaptation \cite{Daume:2011:DAM:2002736.2002819,Dou:2012,irvineQuirkDaumeEMNLP13} and low density languages \cite{irvine-callisonburch:2013:WMT,dou-vaswani-knight:2014:EMNLP2014}. Meanwhile, they have their own advantages and disadvantages. While the former can take larger context into account, it requires high quality seed lexicons to learn a mapping between two vector spaces. In contrast, the latter does not depend on any seed lexicon, but only looks at a limited n-gram context.  
+
+In this work, we take advantages of both approaches and combine them in a joint inference process. More specifically, we extend previous work in large scale Bayesian decipherment by introducing a better base distribution derived from similarities of word embedding vectors. The main contributions of this work are:
+
+\begin{itemize}
+\item We propose a new framework that combines the two main approaches to finding translations from monolingual data.
+
+\item We develop a new base-distribution technique that improves state-of-the art decipherment accuracy by a factor of two for Spanish/English and Malagasy/English. 
+
+\item We make our software available for future research, functioning as a kind of GIZA for non-parallel data.
+\end{itemize}
