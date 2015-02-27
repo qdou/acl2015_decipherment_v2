@@ -19,7 +19,8 @@ P(\mathbf{\cipher}^n) =  \sum_{e_{1} e_{2}} P(e_{1}e_{2}) \prod_{i=1}^{2}P(f_{i}
 \]
 %
 
-If the entire ciphertext corpus contains $N$ such bigrams $F_{1}...F_{N}$, we write down the probability of the ciphertext corpus as:
+%If the entire ciphertext corpus contains $N$ such bigrams $F_{1}...F_{N}$, we write down the probability of the ciphertext corpus as:
+The probability of the ciphertext corpus,
 %
 \[
 \label{p_corpus}
@@ -73,8 +74,8 @@ P(\plain_j = l \mid \mathbf{\plain}_{-j}) \approx P_{LM}(l \mid \plain_{j-1}).
 \marginpar{We have to say that in previous work , $\alpha_{\plain,\cipher}$ has been set to $\alpha * uniform$. Better to reflect that $\alpha_{\plain_j,k}= \alpha * base ?$}. To sample from the posterior, we iterate over the observed ciphertext bigram tokens and use equations~\ref{prob_bayes_ciphertext} and~\ref{prob_bayes_plaintext_lm} to sample a plaintext token with probability
 
 \begin{align} \label{prob_sampling_plaintext}
-P( \plain_j \mid \mathbf{\plain}_{-j}, \mathbf{\cipher} ) \propto & P_{LM}(\plain_j \mid \plain_{j-1}) \times \\
-                                                                                                & P(\cipher_j \mid \plain_j,\mathbf{\cipher}_{-j}, \mathbf{\plain}_{-j}).
+&P( \plain_j \mid \mathbf{\plain}_{-j}, \mathbf{\cipher} ) \propto  P_{LM}(\plain_j \mid \plain_{j-1})  \\
+&           P_{LM}(\plain_{j+1} \mid \plain_{j})   P(\cipher_j \mid \plain_j,\mathbf{\cipher}_{-j}, \mathbf{\plain}_{-j}).
 \end{align}
 
 \iffalse

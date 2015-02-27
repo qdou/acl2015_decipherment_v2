@@ -12,35 +12,43 @@ Recently work learns distributional vectors (embeddings) for words. The most pop
 In the previous section, we incorporated our pre-trained language model in $\alpha_{\plain,\plain'}$ to steer our sampling. In the same vein, we model $\alpha_{\plain,\cipher}$ using pre-trained word embeddings, enabling us to improve our estimate of the posterior distribution. In~\cite{mimno2012topic}, the authors develop topic models where the base distribution over topics is a log-linear model of observed document features, which permits learning better priors over topic distributions for each document. Similarly, we introduce a latent cross-lingual linear mapping $M$ and define:
 
 \begin{equation}
-\alpha_{\cipher,\plain} = \exp \{ v_{\plain}  M  v_{\cipher}^T \},
+\alpha_{\cipher,\plain} = \exp \{ v_{\plain}^T  M  v_{\cipher} \},
 \end{equation}
 
 where $v_{\plain}$ and $v_{\cipher}$ are the pre-trained plaintext word and ciphertext word embeddings.  $M$ is the similarity matrix between the two embedding spaces. $\alpha_{\cipher,\plain}$ can be thought of as the affinity of a plaintext word to be mapped to a ciphertext word. Rewriting the channel part of the joint likelihood in equation~\ref{joint_likelihood}, 
 
 \begin{align*}
 &P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}_{n=1}^{N}, \{ P(\cipher \mid \plain) \})  \\
-&=\prod_{\plain}  \frac{\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}  M  v_{\cipher}^T \} }} {\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}  M  v_{\cipher}^T \}}} \\
-& \prod_{\cipher} P(\cipher \mid \plain)^{\#(\plain,\cipher)+ \exp \{ v_{\plain}  M  v_{\cipher}^T \} -1} 
+&=\prod_{\plain}  \frac{\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}^T  M  v_{\cipher} \} }} {\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}^T  M  v_{\cipher} \}}} \\
+& \prod_{\cipher} P(\cipher \mid \plain)^{\#(\plain,\cipher)+ \exp \{ v_{\plain}^T  M  v_{\cipher} \} -1} 
 \end{align*}
 
 Integrating out the channel probabilities, the complete data log-likelihood of the observed ciphertext bigrams and the sampled plaintext bigrams,
 \begin{align*}
 &P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \} \\
-&= \prod_{\plain}  \frac{\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}  M  v_{\cipher}^T \} }} {\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}  M  v_{\cipher}^T \}}} \\
-& \prod_{\plain}  \frac{\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}  M  v_{\cipher}^T \} + \#(\plain,\cipher)}} {\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}  M  v_{\cipher}^T \} + \#(\plain)}}.
+&= \prod_{\plain}  \frac{\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}^T  M  v_{\cipher} \} }} {\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}^T  M  v_{\cipher} \}}} \\
+& \prod_{\plain}  \frac{\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}^T  M  v_{\cipher} \} + \#(\plain,\cipher)}} {\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}^T  M  v_{\cipher} \} + \#(\plain)}}.
 \end{align*}
 
-The derivative of the $\log$ of $P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}$ with respect to $M$, 
+We also add a $L2$ regularization penalty on the elements of $M$. The derivative of the $\log$ of $P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \} - \frac{\lambda}{2} \sum_{i,j} M_{i,j}^2$ , where $\lambda$ is the regularization weight, with respect to $M$
 \begin{align*}
-&\frac {\partial \log P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}}{\partial M}  \\
-& = \sum_{\plain}  \sum_{\cipher} \exp \{ v_{\plain}  M  v_{\cipher}^T \}  v_{\cipher} v_{\plain}^T \bigl( \\
-& \dirdigamma{\sum_{\cipher'} \exp \{ v_{\plain}  M  v_{\cipher'}^T \}} - \\
-& \dirdigamma{\sum_{\cipher'} \exp \{ v_{\plain}  M  v_{\cipher'}^T \} + \#(\plain)}  + \\
-& + \dirdigamma{\exp \{ v_{\plain}  M  v_{\cipher}^T \} + \#(\plain,\cipher)} - \\
-& \dirdigamma{exp \{ v_{\plain}  M  v_{\cipher}^T \}}, 
+&\frac {\partial \log P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \} - \frac{\lambda}{2} \sum_{i,j} M_{i,j}^2 }{\partial M}  \\
+& = \sum_{\plain}  \sum_{\cipher} \exp \{ v_{\plain}^T  M  v_{\cipher}\}  v_{\plain} v_{\cipher}^T \bigl( \\
+& \dirdigamma{\sum_{\cipher'} \exp \{ v_{\plain}^ T M  v_{\cipher'} \}} - \\
+& \dirdigamma{\sum_{\cipher'} \exp \{ v_{\plain}^T  M  v_{\cipher'} \} + \#(\plain)}  + \\
+& + \dirdigamma{\exp \{ v_{\plain}^T  M  v_{\cipher} \} + \#(\plain,\cipher)} - \\
+& \dirdigamma{exp \{ v_{\plain}^T  M  v_{\cipher} \}} - \lambda  M, 
 \end{align*}
 
-where $\dirdigamma{\cdot}$ is the Digamma function, the derivative of the $\log \dirgamma{\cdot}$. Again, following~\cite{mimno2012topic}, we train the similarity matrix $M$ with stochastic EM. In the E-step, we sample plaintext words for the observed ciphertext using equation~\ref{prob_sampling_plaintext} and in the M-step, we learn $M$ that maximizes $\log P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}$ with stochastic gradient descent. 
+where we use 
+
+\begin{align}
+& \frac{\partial  \exp \{ v_{\plain}^ T M  v_{\cipher} \} }{\partial M} \notag \\
+& = \exp \{ v_{\plain}^ T M  v_{\cipher} \} \frac{\partial  v_{\plain}^T M  v_{\cipher} }{\partial M} \notag \\
+& = \exp \{ v_{\plain}^ T M  v_{\cipher} \} v_{\plain} v_{\cipher}^T \notag.
+\end{align}
+
+$\dirdigamma{\cdot}$ is the Digamma function, the derivative of $\log \dirgamma{\cdot}$. Again, following~\cite{mimno2012topic}, we train the similarity matrix $M$ with stochastic EM. In the E-step, we sample plaintext words for the observed ciphertext using equation~\ref{prob_sampling_plaintext} and in the M-step, we learn $M$ that maximizes $\log P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}$ with stochastic gradient descent. 
 
 \iffalse
 we will first derive the complete data log-likelihood for our model and then present the steps of our stochastic EM algorithm. For a particular ciphertext and plaintext bigram, For an english word $\word{e}$, 
