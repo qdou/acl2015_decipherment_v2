@@ -46,22 +46,22 @@ For all the systems, language models are built using the SRILM toolkit \cite{sri
 
  \begin{figure}[!ht]
   \centering
-  \includegraphics[width=2.9in,height=3.9in]{iterative_sampling}
+  \includegraphics[width=2.9in,height=3.8in]{iterative_sampling}
   \caption{Iterative sampling procedures}
 \label{iterative_sampling}
 \end{figure}
 
 Motivated by the previous work, we use multiple random restarts and an iterative sampling process to improve decipherment \cite{Dou:2012}, as shown in Figure~\ref{iterative_sampling}. The idea is to start a few sampling processes each with a different random sample. Then we combine the results from different runs and use the combined results to initiate the next sampling iteration. The details of the sampling procedure are listed below:
 
- \begin{itemize}
+ \begin{enumerate}
   \item Extract dependency bigrams from parsing outputs and collect their counts.
   \item Keep bigrams whose counts are greater than a threshold $t$. Then start N different randomly seeded and initialized sampling processes. Perform sampling.
   \item At the end of sampling, extract word translation pairs $(f,e)$ from the final sample. Estimate translation probabilities $P(e|f)$  for each pair. Then construct a translation table by keeping translation pairs $(f,e)$ seen in more than one decipherment and use the average $P(e|f)$ as the new translation probability.
-  \item Lower the threshold $t$ to include more bigrams into the sampling process. Start N different sampling processes again and initialize the first sample using the translation pairs obtained from the previous step (for each dependency bigram $f_{1},f_{2}$, find an English sequence $e_{1},e_{2}$, whose $P(e_{1}|f_{1})\cdot P(e_{2}|f_{2})\cdot P(e_{1},e_{2})$is the highest). Perform sampling again.
-  \item Repeat until $t=1$.
-\end{itemize}
+  \item Start N different sampling processes again. Initialize the first sample using the translation pairs obtained from the previous step (for each dependency bigram $f_{1},f_{2}$, find an English sequence $e_{1},e_{2}$, whose $P(e_{1}|f_{1})\cdot P(e_{2}|f_{2})\cdot P(e_{1},e_{2})$is the highest). Initialize base distribution with one learned by previous sampling process whose posterior probability is highest. Go to the second step, and repeat until it converges. 
+  \item Lower the threshold $t$ to include more bigrams into the sampling process. Go to the second step, and repeat until $t=1$.
+ \end{enumerate}
 
-The second step consists of sampling and learning of similarity matrix $M$. The sampling process  creates training examples for learning $M$, and the new $M$ is used to update base distribution for future sampling process. In our Spanish-English decipherment experiments, we use 10 different random starts. In experiments, we also use a higher base distribution weight as more ciphtertext becomes available. We set the weight to 2, 10, and 50 for ciphertexts with 100k, 1 million, and 10 million tokens respectively. 
+The second step consists of sampling and learning of similarity matrix $M$. The sampling process creates training examples for learning $M$, and the new $M$ is used to update base distribution for future sampling process. In our Spanish-English decipherment experiments, we use 10 different random starts. In experiments, we set $\alpha$ to a small value at the beginning, and gradually increase it  as more ciphtertext becomes available. We set $\alpha$ to 2, 10, and 50 for ciphertexts with 100k, 1 million, and 10 million tokens respectively. 
 
 \section{Deciphering Malagasy}
 \label{decipher_malagasy}
@@ -138,9 +138,7 @@ Because the Malagasy parser does not predict dependency relation types, we use h
 
 \subsection{Sampling Procedure}
 
-We use the same sampling protocol designed for Spanish-English decipherment. However, in experiments, we find that simply using Viterbi decoding to initialize the first sample does not work as well. Therefore, in addition to using Viterbi decoding, we also initialize the base distribution to the base distribution of the previous decipherment that produces highest accuracy.
-
-Compared with Spanish-English decipherment, we find the base distribution plays a more important role in achieving higher decipherment accuracy for Malagasy-English. Therefore, we set weight to 10, 100, and 500 when deciphering 100k, 1 million, and 20 million token ciphtertexts, respectively.
+We use the same sampling protocol designed for Spanish-English decipherment. Compared with Spanish-English decipherment, we find the base distribution plays a more important role in achieving higher decipherment accuracy for Malagasy-English. Therefore, we set weight to 10, 100, and 500 when deciphering 100k, 1 million, and 20 million token ciphtertexts, respectively.
 
 
 \section{Results}
@@ -178,7 +176,7 @@ To create $T_{gold}$, we use GIZA to align a small amount of Spanish-English par
 \label{es-en-curve}
 \end{figure}
 
-We also present the learning curves of decipherment accuracy for 5k most frequent word types. Figure~\ref{es-en-curve} compares the baseline with \textbf{DMRE} in deciphering Spanish into English. Performance of the baseline is in line with previous work \cite{dou-knight:2013:EMNLP}. (The accuracy reported here is higher as we evaluate top 5 accuracy for each word type.) With 100k tokens of Spanish text, the baseline achieves 1.9\% accuracy, while the new system achieves 12.4\% accuracy, which improves the baseline by over 6 times. The improvement holds consistently throughout the experiment. In the end, the baseline achieves 26.0\% accuracy, while the new system achieves 59.1\% accuracy, over 2 times higher. 
+We also present the learning curves of decipherment accuracy for 5k most frequent word types. Figure~\ref{es-en-curve} compares the baseline with \textbf{DMRE} in deciphering Spanish into English. Performance of the baseline is in line with previous work \cite{dou-knight:2013:EMNLP}. (The accuracy reported here is higher as we evaluate top 5 accuracy for each word type.) With 100k tokens of Spanish text, the baseline achieves 1.9\% accuracy, while the new system achieves 12.4\% accuracy, which improves the baseline by over 6 times. The improvement holds consistently throughout the experiment. In the end, the baseline achieves 26.0\% accuracy, while the new system achieves 59.0\% accuracy, over 2 times higher. 
 
  \begin{figure}[!ht]
   \centering
@@ -189,4 +187,27 @@ We also present the learning curves of decipherment accuracy for 5k most frequen
 
 Figure \ref{mlg-en-curve} compares the baseline with our new approach in deciphering Malagasy into English. With 100k tokens of data, the baseline achieves 1.2\% accuracy, while the new system achieves 2.4\% accuracy.  We observe consistent improvement throughout the experiment. In the end, the baseline accuracy climbs to 5.8\%, while the new system improves it to 11.2\%.
 
-Overall, the improvement we achieved is solid, and is observed across different language pairs. We hypothesize the gain comes from a better base distribution that considers larger context information. This helps prevent the language model driving deicpherment to a wrong direction. We evaluate the base distribution with the same translation table we use for evaluation decipherment accuracy. For each cipher word type $f$, if any of its translation $e$ with score $P(e|f) > 0.1$ appears in the top K candidates proposed by the base distribution, we increase correct count by 1. We evaluate base distribution learned during Spanish-English decipherment. The total number of evaluable word types is 7469. With 100k cipher tokens, 5416 are correct, with 10m cipher tokens, 6123 are correct.
+Overall, the improvement we achieved is solid, and is observed across different language pairs. We hypothesize the gain comes from a better base distribution that considers larger context information. This helps prevent the language model driving deicpherment to a wrong direction. 
+
+%We evaluate the base distribution with the same translation table we use for evaluation decipherment accuracy. For each cipher word type $f$, if any of its translation $e$ with score $P(e|f) \geq 0.1$ appears in the top 500 candidates proposed by the base distribution, we view that the base distribution proposes a correct translation for $f$. We evaluate base distribution learned during Spanish-English decipherment. The total number of evaluable word types is 7469. With 100k cipher tokens, 5416 are correct, with 10m cipher tokens, 6123 are correct.
+To show that the base distribution we learned is sensible , we visualize it in Figure \ref{viz_countries} and Figure \ref{viz_close}. To generate the visualizations, we first project English embeddings vectors into Spanish embeddings space using the similarity matrix $M$. Then, we put the word vectors together and project all of them from 50 dimension down to 2 dimension. Two words are close if their embeddings vectors are similar. Ideally, we hope words that are translations are also close to each other.
+
+ \begin{figure}[!ht]
+  \centering
+  \includegraphics[width=2.5in,height=2.5in]{viz_countries}
+  \caption{A snapshot of visualization from mapping of 1k most frequent English words to Spanish words. Groups of country names in Spanish and English are close.}
+\label{viz_countries}
+\end{figure}
+
+The first thing we observe is that translations appear close as groups. As shown in 
+Fiture \ref{viz_countries}, the group of country names in Spanish and their English translations are near to each other.
+
+
+ \begin{figure}[!ht]
+  \centering
+  \includegraphics[width=2.5in,height=2.5in]{viz_top1000}
+  \caption{A snapshot of visualization from mapping of 1k most frequent English words to Spanish words. Pairs of translations that are right next to each other.}
+\label{viz_close}
+\end{figure}
+
+As shown in Figure \ref{viz_close} When we look deeper, we also find many pairs of translations that are right next to each other. Previous work has also produced similar visualization with help of parallel data. However, we learn the mapping using only monolingual data.
