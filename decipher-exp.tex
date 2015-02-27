@@ -36,7 +36,7 @@ We implement a baseline system based on the work described in \newcite{dou-knigh
 
 The baseline uses slice sampling with a uniform base distribution.
 
-We denote the system that uses our new method as \textbf{DMRE} (Dirichlet Multinomial Regression). The system is the same as the baseline except that it uses a base distribution derived from word context similarities.  Word embeddings are learned using word2vec \cite{mikolov2013efficient}.
+We denote the system that uses our new method as \textbf{DMRE} (Dirichlet Multinomial Regression with Embedings). The system is the same as the baseline except that it uses a base distribution derived from word context similarities.  Word embeddings are learned using word2vec \cite{mikolov2013efficient}.
 
 For all the systems, language models are built using the SRILM toolkit \cite{srilm}. We use the modified Kneser-Ney \cite{KneserNey95} algorithm for smoothing.
 
