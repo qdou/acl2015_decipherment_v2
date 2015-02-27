@@ -24,21 +24,21 @@ where $v_{\plain}$ and $v_{\cipher}$ are the pre-trained plaintext word and ciph
 \end{align*}
 
 Integrating out the channel probabilities, the complete data log-likelihood of the observed ciphertext bigrams and the sampled plaintext bigrams,
-\begin{align}
+\begin{align*}
 &P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \} \\
 &= \prod_{\plain}  \frac{\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}  M  v_{\cipher}^T \} }} {\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}  M  v_{\cipher}^T \}}} \\
 & \prod_{\plain}  \frac{\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}  M  v_{\cipher}^T \} + \#(\plain,\cipher)}} {\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}  M  v_{\cipher}^T \} + \#(\plain)}}.
-\end{align}
+\end{align*}
 
 The derivative of the $\log$ of $P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}$ with respect to $M$, 
-\begin{align}
+\begin{align*}
 &\frac {\partial \log P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}}{\partial M}  \\
 & = \sum_{\plain}  \sum_{\cipher} \exp \{ v_{\plain}  M  v_{\cipher}^T \}  v_{\cipher} v_{\plain}^T \bigl( \\
 & \dirdigamma{\sum_{\cipher'} \exp \{ v_{\plain}  M  v_{\cipher'}^T \}} - \\
 & \dirdigamma{\sum_{\cipher'} \exp \{ v_{\plain}  M  v_{\cipher'}^T \} + \#(\plain)}  + \\
 & + \dirdigamma{\exp \{ v_{\plain}  M  v_{\cipher}^T \} + \#(\plain,\cipher)} - \\
 & \dirdigamma{exp \{ v_{\plain}  M  v_{\cipher}^T \}}, 
-\end{align}
+\end{align*}
 
 where $\dirdigamma{\cdot}$ is the Digamma function, the derivative of the $\log \dirgamma{\cdot}$. Again, following~\cite{mimno2012topic}, we train the similarity matrix $M$ with stochastic EM. In the E-step, we sample plaintext words for the observed ciphertext using equation~\ref{prob_sampling_plaintext} and in the M-step, we learn $M$ that maximizes $\log P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}$ with stochastic gradient descent. 
 
