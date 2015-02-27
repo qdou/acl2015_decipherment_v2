@@ -189,4 +189,26 @@ We also present the learning curves of decipherment accuracy for 5k most frequen
 
 Figure \ref{mlg-en-curve} compares the baseline with our new approach in deciphering Malagasy into English. With 100k tokens of data, the baseline achieves 1.2\% accuracy, while the new system achieves 2.4\% accuracy.  We observe consistent improvement throughout the experiment. In the end, the baseline accuracy climbs to 5.8\%, while the new system improves it to 11.2\%.
 
-Overall, the improvement we achieved is solid, and is observed across different language pairs. We hypothesize the gain comes from a better base distribution that considers larger context information. This helps prevent the language model driving deicpherment to a wrong direction. We evaluate the base distribution with the same translation table we use for evaluation decipherment accuracy. For each cipher word type $f$, if any of its translation $e$ with score $P(e|f) > 0.1$ appears in the top K candidates proposed by the base distribution, we increase correct count by 1. We evaluate base distribution learned during Spanish-English decipherment. The total number of evaluable word types is 7469. With 100k cipher tokens, 5416 are correct, with 10m cipher tokens, 6123 are correct.
+Overall, the improvement we achieved is solid, and is observed across different language pairs. We hypothesize the gain comes from a better base distribution that considers larger context information. This helps prevent the language model driving deicpherment to a wrong direction. 
+
+%We evaluate the base distribution with the same translation table we use for evaluation decipherment accuracy. For each cipher word type $f$, if any of its translation $e$ with score $P(e|f) \geq 0.1$ appears in the top 500 candidates proposed by the base distribution, we view that the base distribution proposes a correct translation for $f$. We evaluate base distribution learned during Spanish-English decipherment. The total number of evaluable word types is 7469. With 100k cipher tokens, 5416 are correct, with 10m cipher tokens, 6123 are correct.
+To show that the learned base distribution makes sense, we visualize it Figure \ref{viz_top1000} and Figure \ref{viz_top100}. To generate the visualizations, we first project English embeddings vectors into Spanish embeddings space using the similarity matrix $M$. Then, we put the word embeddings together and project all of them from 50 dimension down to 2 dimension. Two words are close together if their embeddings vectors are similar. Ideally, we hope words that are translations are also close to each other.
+
+ \begin{figure}[!ht]
+  \centering
+  \includegraphics[width=2.5in,height=2.5in]{viz_top1000.png}
+  \caption{A snapshot of visualization from mapping of 1k most frequent English words to Spanish words. Translations appear close to each other.}
+\label{viz_top100}
+\end{figure}
+
+Fiture \ref{viz_top100} shows projection of 100 most frequent English words to Spanish words. 
+
+
+ \begin{figure}[!ht]
+  \centering
+  \includegraphics[width=2.5in,height=2.5in]{viz_top1000.png}
+  \caption{A snapshot of visualization from mapping of 1k most frequent English words to Spanish words. Translations appear close to each other.}
+\label{viz_top1000}
+\end{figure}
+
+As shown in Fiture \ref{viz_top100}, we still find good translations for lower frequent word types when we map 1k most frequent English words. 
