@@ -42,11 +42,11 @@ print 'Saving the plot to:', png
 fig, ax = pyplot.subplots(figsize=(200, 200))
 ax.scatter(xs, ys, color='w')
 for i, phrase in enumerate(phrase_table):
-    ax.annotate(phrase.decode('utf-8'), (float(xs[i]), float(ys[i])), fontsize='xx-small')
+    ax.annotate(phrase.decode('utf-8'), (float(xs[i]), float(ys[i])), fontsize='medium')
 
-ax.set_xlabel('t-sne 1', fontsize='xx-small')
-ax.set_ylabel('t-sne 2', fontsize='xx-small')
+ax.set_xlabel('t-sne 1', fontsize='medium')
+ax.set_ylabel('t-sne 2', fontsize='medium')
 ax.set_xticks([])
 ax.set_yticks([])
-ax.set_title(filename, fontsize='xx-small')
+ax.set_title(filename, fontsize='medium')
 fig.savefig(png)
