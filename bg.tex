@@ -104,6 +104,6 @@ P(\cipher \mid \plain) =  \frac{\#(\cipher,\plain)}{\#(\plain)}.
 \]
 \fi
 
-In previous work~\cite{Dou:2012,dou-knight:2013:EMNLP}, the authors use symmetric priors over the channel probabilities, where $\alpha_{\plain,\cipher} = \alpha \frac{1}{V_\cipher}$ and they set $\alpha$ to $1$. Symmetric priors over word translation probabilities are a poor choice, as one would not a-priori expect plaintext words and ciphertext words to cooccur with equal frequency. Bayesian inference is a powerful framework that allows us to inject useful prior information into the sampling process. In the next section, we will describe how we model and learn better priors using distributional properties of words. In subsequent sections, we show significant improvements over the baseline by learning better priors.
+In previous work~\cite{Dou:2012,dou-knight:2013:EMNLP}, the authors use symmetric priors over the channel probabilities, where $\alpha_{\plain,\cipher} = \alpha \frac{1}{V_\cipher}$, and they set $\alpha$ to $1$. Symmetric priors over word translation probabilities are a poor choice, as one would not a-priori expect plaintext words and ciphertext words to cooccur with equal frequency. Bayesian inference is a powerful framework that allows us to inject useful prior information into the sampling process, a feature that we would like to use. In the next section, we will describe how we model and learn better priors using distributional properties of words. In subsequent sections, we show significant improvements over the baseline by learning better priors.
 
 

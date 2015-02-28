@@ -47,7 +47,13 @@ where we use
 & = \exp \{ v_{\plain}^ T M  v_{\cipher} \} \frac{\partial  v_{\plain}^T M  v_{\cipher} }{\partial M} \notag \\
 & = \exp \{ v_{\plain}^ T M  v_{\cipher} \} v_{\plain} v_{\cipher}^T \notag.
 \end{align}
-$\dirdigamma{\cdot}$ is the Digamma function, the derivative of $\log \dirgamma{\cdot}$. Again, following~\cite{mimno2012topic}, we train the similarity matrix $M$ with stochastic EM. In the E-step, we sample plaintext words for the observed ciphertext using equation~\ref{prob_sampling_plaintext} and in the M-step, we learn $M$ that maximizes $\log P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}$ with stochastic gradient descent. 
+$\dirdigamma{\cdot}$ is the Digamma function, the derivative of $\log \dirgamma{\cdot}$. Again, following~\cite{mimno2012topic}, we train the similarity matrix $M$ with stochastic EM. In the E-step, we sample plaintext words for the observed ciphertext using equation~\ref{prob_sampling_plaintext} and in the M-step, we learn $M$ that maximizes $\log P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \})$ with stochastic gradient descent. After learning $M$, we can set 
+
+\begin{align}
+\alpha_{\plain,\cipher} &= \sum_{\cipher'} \exp \{ v_{\plain}^T  M  v_{\cipher'} \} \frac{\exp \{ v_{\plain}^T  M  v_{\cipher} \}} {\sum_{\cipher'} \exp \{ v_{\plain}^T  M  v_{\cipher'} \} } \notag \\
+                                    & = \alpha_{\plain} m_{\plain,\cipher} \label{base-concentration}, 
+\end{align}
+where $\alpha_{\plain}$ is the concentration parameter and $m_{\plain,\cipher}$ is an element of the base measure $\mathbf{m}_e$ for plaintext word $e$. 
 
 \iffalse
 we will first derive the complete data log-likelihood for our model and then present the steps of our stochastic EM algorithm. For a particular ciphertext and plaintext bigram, For an english word $\word{e}$, 
