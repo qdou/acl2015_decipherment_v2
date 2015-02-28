@@ -60,7 +60,7 @@ Motivated by the previous work, we use multiple random restarts and an iterative
   \item Lower the threshold $t$ to include more bigrams into the sampling process. Go to the second step, and repeat until $t=1$.
  \end{enumerate}
 
-The sampling process consists of sampling and learning of similarity matrix $M$. The sampling process creates training examples for learning $M$, and the new $M$ is used to update base distribution for drawing samples. In our Spanish/English decipherment experiments, we use 10 different random starts. In experiments, we set $\alpha$ to a small value at the beginning, and gradually increase it as more ciphtertext becomes available. We set $\alpha$ to 1, 2, and 5 for ciphertexts with 100k, 1 million, and 10 million tokens respectively. 
+The sampling process consists of sampling and learning of similarity matrix $M$. The sampling process creates training examples for learning $M$, and the new $M$ is used to update the base distribution for sampling. In our Spanish/English decipherment experiments, we use 10 different random starts. In experiments, we set $\alpha$ to a small value at the beginning, and gradually increase it as more ciphtertext becomes available. We set $\alpha$ to 1, 2, and 5 for ciphertexts with 100k, 1 million, and 10 million tokens respectively. 
 
 \section{Deciphering Malagasy}
 \label{decipher_malagasy}
