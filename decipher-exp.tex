@@ -191,24 +191,29 @@ Overall, we achieve large consistent gains across both language pairs. We hypoth
 %We evaluate the base distribution with the same translation table we use for evaluation decipherment accuracy. For each cipher word type $f$, if any of its translation $e$ with score $P(e|f) \geq 0.1$ appears in the top 500 candidates proposed by the base distribution, we view that the base distribution proposes a correct translation for $f$. We evaluate base distribution learned during Spanish-English decipherment. The total number of evaluable word types is 7469. With 100k cipher tokens, 5416 are correct, with 10m cipher tokens, 6123 are correct.
 Since our learned transformation matrix $M$ significantly improves decipherment accuracy, it's likely that it is \emph{translation preserving}, that is, plaintext words are transformed from their native vector space to points in the ciphertext such that translations are close to each other. To visualize this effect, we take the top $5000$ plaintext words and transform them into embeddings $v_{\plain'} = v_{\plain}^T M$. We then project the top $5000$ ciphertext words and the projected plaintext words into a $2-$dimensional space using t-sne~\cite{van2008visualizing}. 
 
+In figure~\ref{fig:overlap}, we see an instance of a recurring phenomenon, where translation pairs are very close and sometimes even overlap each other, for example (judge, jueces), (secret, secretos). The word ``magistrado'', which has been placed close to its possible translations, does not appear in our evaluation set. Thus, our approach is capable of learning word translations that cannot be discovered from limited parallel data. We often also see \emph{translation clusters}, where semantic groups of words are close to each other. For example, in figure~\ref{fig:trans-cluster}, we can see that time expressions in Spanish are quite close to their translations in English. Although better quality translation visualizations~\cite{mikolov2013exploiting} have been presented in previous work, they exploit large amounts of parallel data to learn the mapping between source and target words, while our transformation is learned on \emph{non-parallel} data. 
+
 % A common approach to evaluate mappings between different word-vector spaces is to inspect the joint embedding of words in To show that the base distribution we learned is sensible , we visualize it in Figure \ref{viz_countries} and Figure \ref{viz_close}. To generate the visualizations, we first project English embeddings vectors into Spanish embeddings space using the similarity matrix $M$. Then, we put the word vectors together and project all of them from 50 dimension down to 2 dimension. Two words are close if their embeddings vectors are similar. Ideally, we hope words that are translations are also close to each other.
 
  \begin{figure}[!ht]
   \centering
-  \includegraphics[width=3.0in,height=2.0in]{time}
-  \caption{A snapshot of visualization from mapping of 1k most frequent English words to Spanish words. Groups of country names in Spanish and English are close.}
-\label{viz_countries}
+  \includegraphics[width=3.0in,height=2.0in]{magistrado}
+  \caption{Translation pairs are often close and sometimes overlap each other. Words in spanish have been appended with \_spanish}
+\label{fig:overlap}
 \end{figure}
-
-The first thing we observe is that translations appear close as groups. As shown in 
-Fiture \ref{viz_countries}, the group of country names in Spanish and their English translations are near to each other.
 
 
  \begin{figure}[!ht]
   \centering
-  \includegraphics[width=3.0in,height=2.0in]{magistrado}
-  \caption{A snapshot of visualization from mapping of 1k most frequent English words to Spanish words. Pairs of translations that are right next to each other.}
-\label{viz_close}
+  \includegraphics[width=3.0in,height=2.0in]{time}
+  \caption{We also see semantic groups of word-translations close to each other.}
+\label{fig:trans-cluster}
 \end{figure}
 
-As shown in Figure \ref{viz_close} When we look deeper, we also find many pairs of translations that are right next to each other. Previous work has also produced similar visualization with help of parallel data. However, we learn the mapping using only monolingual data.
+%The first thing we observe is that translations appear close as groups. As shown in 
+%Fiture \ref{viz_countries}, the group of country names in Spanish and their English translations are near to each other.
+
+
+
+
+%As shown in Figure \ref{viz_close} When we look deeper, we also find many pairs of translations that are right next to each other. Previous work has also produced similar visualization with help of parallel data. However, we learn the mapping using only monolingual data.
