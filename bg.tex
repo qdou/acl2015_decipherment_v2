@@ -72,9 +72,10 @@ P(\plain_j = l \mid \mathbf{\plain}_{-j}) \approx P_{LM}(l \mid \plain_{j-1}).
 \end{equation}
 
 %\marginpar{We have to say that in previous work , $\alpha_{\plain,\cipher}$ has been set to $\alpha * uniform$. Better to reflect that $\alpha_{\plain_j,k}= \alpha * base ?$}. To sample from the posterior, we iterate over the observed ciphertext bigram tokens and use equations~\ref{prob_bayes_ciphertext} and~\ref{prob_bayes_plaintext_lm} to sample a plaintext token with probability
+To sample from the posterior, we iterate over the observed ciphertext bigram tokens and use equations~\ref{prob_bayes_ciphertext} and~\ref{prob_bayes_plaintext_lm} to sample a plaintext token with probability
 
 \begin{align} \label{prob_sampling_plaintext}
-&P( \plain_j \mid \mathbf{\plain}_{-j}, \mathbf{\cipher} ) \propto  P_{LM}(\plain_j \mid \plain_{j-1})  \\
+&P( \plain_j \mid \mathbf{\plain}_{-j}, \mathbf{\cipher} ) \propto  P_{LM}(\plain_j \mid \plain_{j-1})  \notag \\
 &           P_{LM}(\plain_{j+1} \mid \plain_{j})   P(\cipher_j \mid \plain_j,\mathbf{\cipher}_{-j}, \mathbf{\plain}_{-j}).
 \end{align}
 
