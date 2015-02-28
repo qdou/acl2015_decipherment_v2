@@ -74,7 +74,7 @@ Despite spoken in Africa, Malagasy has its root in Asia, and belongs to the Mala
 
 \subsection{Data}
 
-Table~\ref{mlg-en-data} lists the sizes of monolingual and parallel data used in this experiment, released by \newcite{dou-vaswani-knight:2014:EMNLP2014}. The monolingual data in Malagasy contains news text collected from Madagascar websites. The English monolingual data contains Gigaword and additional 300 million tokens of African news. Parallel data (used for evaluation only) is collected from GlobalVoices, a multilingual news website, where volunteers translate news into different languages.
+Table~\ref{mlg-en-data} lists the sizes of monolingual and parallel data used in this experiment, released by \newcite{dou-vaswani-knight:2014:EMNLP2014}. The monolingual data in Malagasy contains news text collected from Madagascar websites. The English monolingual data contains Gigaword and an additional 300 million tokens of African news. Parallel data (used for evaluation only) is collected from GlobalVoices, a multilingual news website, where volunteers translate news into different languages.
 
  \begin{table}
  \begin{center}
@@ -137,7 +137,7 @@ Because the Malagasy parser does not predict dependency relation types, we use t
 
 \subsection{Sampling Procedure}
 
-We use the same sampling protocol designed for Spanish/English decipherment. We double the number of random starts to 20. Further more, compared with Spanish/English decipherment, we find the base distribution plays a more important role in achieving higher decipherment accuracy for Malagasy/English. Therefore, we set weight to 10, 50, and 200 when deciphering 100k, 1 million, and 20 million token ciphtertexts, respectively.
+We use the same sampling protocol designed for Spanish/English decipherment. We double the number of random starts to 20. Further more, compared with Spanish/English decipherment, we find the base distribution plays a more important role in achieving higher decipherment accuracy for Malagasy/English. Therefore, we set $\alpha$ to 10, 50, and 200 when deciphering 100k, 1 million, and 20 million token ciphtertexts, respectively.
 
 
 \section{Results}
@@ -163,7 +163,7 @@ In this section, we first compare decipherment accuracy of the baseline with our
 
 We use top-5 type accuracy as our evaluation metric for decipherment. Given a word type $f$ in Spanish, we find top-5 translation pairs $(f,e)$ ranked by $P(e|f)$ from the learned decipherent translation table. If any pair $(f,e)$ can also be found in a gold translation lexicon $T_{gold}$, we treat the word type $f$ as correctly deciphered. Let $|C|$ be the number of word types correctly deciphered, and $|V|$ be the total number of word types evaluated. We define type accuracy as $\frac{|C|}{|V|}$.
 
-To create $T_{gold}$, we use GIZA to align a small amount of Spanish/English parallel text (1 million tokens for each language), and use the lexicon derived from the alignment as our gold translation lexicon. $T_{gold}$ contains a subset of 4233 word types in the top 5000 frequent word types, and 7479 word types in the top 10k frequent word types. We decipher the 10k most frequent Spanish word types to the 10k most frequent English word types, and evaluate decipherment accuracy on both the 5k most frequent word types as well as the full 10k word types.
+To create $T_{gold}$, we use GIZA to align a small amount of Spanish/English parallel text (1 million tokens for each language), and use the lexicon derived from the alignment as our gold translation lexicon. $T_{gold}$ contains a subset of 4233 word types in the 5k most frequent word types, and 7479 word types in the top 10k frequent word types. We decipher the 10k most frequent Spanish word types to the 10k most frequent English word types, and evaluate decipherment accuracy on both the 5k most frequent word types as well as the full 10k word types.
 
 We evaluate accuracy for the 5k and 10k most frequent word types for each language pair, and present them in Table~\ref{decipher-acc-result}.
 
@@ -175,7 +175,7 @@ We evaluate accuracy for the 5k and 10k most frequent word types for each langua
 \label{es-en-curve}
 \end{figure}
 
-We also present the learning curves of decipherment accuracy for 5k most frequent word types. Figure~\ref{es-en-curve} compares the baseline with \textbf{DMRE} in deciphering Spanish into English. Performance of the baseline is in line with previous work \cite{dou-knight:2013:EMNLP}. (The accuracy reported here is higher as we evaluate top 5 accuracy for each word type.) With 100k tokens of Spanish text, the baseline achieves 1.9\% accuracy, while \textbf{DMRE} reaches 12.4\% accuracy, improving the baseline by over 6 times. The improvement holds consistently throughout the experiment. In the end, the baseline achieves 29.0\% accuracy, while \textbf{DMRE} reaches 64.7\% accuracy, over 2 times higher. 
+We also present the learning curves of decipherment accuracy for the 5k most frequent word types. Figure~\ref{es-en-curve} compares the baseline with \textbf{DMRE} in deciphering Spanish into English. Performance of the baseline is in line with previous work \cite{dou-knight:2013:EMNLP}. (The accuracy reported here is higher as we evaluate top-5 accuracy for each word type.) With 100k tokens of Spanish text, the baseline achieves 1.9\% accuracy, while \textbf{DMRE} reaches 12.4\% accuracy, improving the baseline by over 6 times. The improvement holds consistently throughout the experiment. In the end, the baseline achieves 29.0\% accuracy, while \textbf{DMRE} reaches 64.7\% accuracy, over 2 times higher. 
 
  \begin{figure}[!ht]
   \centering
@@ -189,9 +189,11 @@ Figure \ref{mlg-en-curve} compares the baseline with our new approach in deciphe
 Overall, we achieve large consistent gains across both language pairs. We hypothesize the gain comes from a better base distribution that considers larger context information. This helps prevent the language model driving deicpherment to a wrong direction. 
 
 %We evaluate the base distribution with the same translation table we use for evaluation decipherment accuracy. For each cipher word type $f$, if any of its translation $e$ with score $P(e|f) \geq 0.1$ appears in the top 500 candidates proposed by the base distribution, we view that the base distribution proposes a correct translation for $f$. We evaluate base distribution learned during Spanish-English decipherment. The total number of evaluable word types is 7469. With 100k cipher tokens, 5416 are correct, with 10m cipher tokens, 6123 are correct.
-Since our learned transformation matrix $M$ significantly improves decipherment accuracy, it's likely that it is \emph{translation preserving}, that is, plaintext words are transformed from their native vector space to points in the ciphertext such that translations are close to each other. To visualize this effect, we take the top $5000$ plaintext words and transform them into embeddings $v_{\plain'} = v_{\plain}^T M$. We then project the top $5000$ ciphertext words and the projected plaintext words into a $2-$dimensional space using t-sne~\cite{van2008visualizing}. 
+Since our learned transformation matrix $M$ significantly improves decipherment accuracy, it's likely that it is \emph{translation preserving}, that is, plaintext words are transformed from their native vector space to points in the ciphertext such that translations are close to each other. To visualize this effect, we take the $5k$ most frequent plaintext words and transform them into new embeddings $v_{\plain'} = v_{\plain}^T M$, where $M$ is learned from 10 million Spanish bigram data. We then project the $5k$ most frequent ciphertext words and the projected plaintext words into a $2-$dimensional space using t-sne~\cite{van2008visualizing}. 
 
-In figure~\ref{fig:overlap}, we see an instance of a recurring phenomenon, where translation pairs are very close and sometimes even overlap each other, for example (judge, jueces), (secret, secretos). The word ``magistrado'', which has been placed close to its possible translations, does not appear in our evaluation set. Thus, our approach is capable of learning word translations that cannot be discovered from limited parallel data. We often also see \emph{translation clusters}, where semantic groups of words are close to each other. For example, in figure~\ref{fig:trans-cluster}, we can see that time expressions in Spanish are quite close to their translations in English. Although better quality translation visualizations~\cite{mikolov2013exploiting} have been presented in previous work, they exploit large amounts of parallel data to learn the mapping between source and target words, while our transformation is learned on \emph{non-parallel} data. 
+In Figure~\ref{fig:overlap}, we see an instance of a recurring phenomenon, where translation pairs are very close and sometimes even overlap each other, for example (judge, jueces), (secret, secretos). The word ``magistrado'' does not appear in our evaluation set. However, it is placed close to its possible translations. Thus, our approach is capable of learning word translations that cannot be discovered from limited parallel data. 
+
+We often also see \emph{translation clusters}, where translations of groups of words are close to each other. For example, in Figure~\ref{fig:trans-cluster}, we can see that time expressions in Spanish are quite close to their translations in English. Although better quality translation visualizations~\cite{mikolov2013exploiting} have been presented in previous work, they exploit large amounts of parallel data to learn the mapping between source and target words, while our transformation is learned on \emph{non-parallel} data. 
 
 % A common approach to evaluate mappings between different word-vector spaces is to inspect the joint embedding of words in To show that the base distribution we learned is sensible , we visualize it in Figure \ref{viz_countries} and Figure \ref{viz_close}. To generate the visualizations, we first project English embeddings vectors into Spanish embeddings space using the similarity matrix $M$. Then, we put the word vectors together and project all of them from 50 dimension down to 2 dimension. Two words are close if their embeddings vectors are similar. Ideally, we hope words that are translations are also close to each other.
 
@@ -206,7 +208,7 @@ In figure~\ref{fig:overlap}, we see an instance of a recurring phenomenon, where
  \begin{figure}[!ht]
   \centering
   \includegraphics[width=3.0in,height=2.0in]{time}
-  \caption{We also see semantic groups of word-translations close to each other.}
+  \caption{Semantic groups of word-translations appear close to each other.}
 \label{fig:trans-cluster}
 \end{figure}
 
