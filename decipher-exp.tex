@@ -5,7 +5,7 @@ In this section, we describe our data and experimental conditions for decipherin
 
 \subsection{Data}
 
-In our Spanish/English decipherment experiments, we use half of the Gigaword corpus as monolingual data, and a small amount of parallel data from Europarl {\em only for evaluation}. We keep only the 10k most frequent word types for both languages and replace all other word types with ``UNK''.  We also exclude sentences longer than 40 tokens, which significantly slow down our parser. After preprocessing, the size of data for each language is shown in Table~\ref{es-en-data}. 
+In our Spanish/English decipherment experiments, we use half of the Gigaword corpus as monolingual data, and a small amount of parallel data from Europarl {\em for evaluation}. We keep only the 10k most frequent word types for both languages and replace all other word types with ``UNK''.  We also exclude sentences longer than 40 tokens, which significantly slow down our parser. After preprocessing, the size of data for each language is shown in Table~\ref{es-en-data}. 
 %The Gigaword corpus consists of news articles from different news agencies.  
 While we use all the monolingual data shown in Table \ref{es-en-data} to learn word embeddings, we only parse the AFP (Agence France-Presse) section of the Gigaword corpus to extract cipher dependency bigrams and build a plaintext language model. We also use GIZA \cite{GIZA} to align Europarl parallel data to build a dictionary for evaluating our decipherment.
 
