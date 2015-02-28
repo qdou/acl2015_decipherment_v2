@@ -71,7 +71,7 @@ Since we have large amounts of plaintext data, we can train a high-quality depen
 P(\plain_j = l \mid \mathbf{\plain}_{-j}) \approx P_{LM}(l \mid \plain_{j-1}).
 \end{equation}
 
-\marginpar{We have to say that in previous work , $\alpha_{\plain,\cipher}$ has been set to $\alpha * uniform$. Better to reflect that $\alpha_{\plain_j,k}= \alpha * base ?$}. To sample from the posterior, we iterate over the observed ciphertext bigram tokens and use equations~\ref{prob_bayes_ciphertext} and~\ref{prob_bayes_plaintext_lm} to sample a plaintext token with probability
+%\marginpar{We have to say that in previous work , $\alpha_{\plain,\cipher}$ has been set to $\alpha * uniform$. Better to reflect that $\alpha_{\plain_j,k}= \alpha * base ?$}. To sample from the posterior, we iterate over the observed ciphertext bigram tokens and use equations~\ref{prob_bayes_ciphertext} and~\ref{prob_bayes_plaintext_lm} to sample a plaintext token with probability
 
 \begin{align} \label{prob_sampling_plaintext}
 &P( \plain_j \mid \mathbf{\plain}_{-j}, \mathbf{\cipher} ) \propto  P_{LM}(\plain_j \mid \plain_{j-1})  \\
@@ -86,7 +86,7 @@ P_{sample}(e_{1}e_{2}) =  P(e_{1}e_{2}) \prod_{i=1}^{2}P_{CRP}(f_{i}|e_{i})
 \]
 %
 In the above equation, the translation probability $P_{CRP}(f_{i}|e_{i})$ is modeled by the Chinese Restaurant Process(CRP) as defined in Equation \ref{p_channel}.
-%
+%!TEX encoding = UTF-8 Unicode
 \[
 \label{p_channel}
 P_{CRP}(f_{i}|e_{i}) = \frac{\alpha P_0(f_{i}|e_{i})+count(f_{i},e_{i})}{\alpha+count(e_{i})}
@@ -95,11 +95,15 @@ P_{CRP}(f_{i}|e_{i}) = \frac{\alpha P_0(f_{i}|e_{i})+count(f_{i},e_{i})}{\alpha+
 where $P_{0}$ is a base distribution, also known as a prior, and $\alpha$ is a parameter that controls how much we trust the base distribution. $count(f_{i},e_{i})$ and $count(e_{i})$ record the number of times $f_{i},e_{i}$ and $e_{i}$ appear in previously generated samples respectively. The base distribution is given independently, and in all the previous work, it is set to uniform.
 \fi
 
+\iffalse
 At the end of sampling, we compute $P(\cipher \mid \plain)$ from ciphertext and its plaintext samples using maximum likelihood estimation:
 
 \[
 \label{mlh_estimation}
 P(\cipher \mid \plain) =  \frac{\#(\cipher,\plain)}{\#(\plain)}.
 \]
+\fi
 
-In the next section, we will describe how we model and learn an improved base distribution for $P(\cipher \mid \plain)$.
+In previous work~\cite{Dou:2012,dou-knight:2013:EMNLP}, the authors use symmetric priors over the channel probabilities, where $\alpha_{\plain,\cipher} = \alpha \frac{1}{V_\cipher}$ and they set $\alpha$ to $1$. Symmetric priors over word translation probabilities are a poor choice, as one would not a-priori expect plaintext words and ciphertext words to cooccur with equal frequency. Bayesian inference is a powerful framework that allows us to inject useful prior information into the sampling process. In the next section, we will describe how we model and learn better priors using distributional properties of words. In subsequent sections, we show significant improvements over the baseline by learning better priors.
+
+
