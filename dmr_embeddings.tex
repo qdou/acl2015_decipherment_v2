@@ -25,7 +25,7 @@ where $v_{\plain}$ and $v_{\cipher}$ are the pre-trained plaintext word and ciph
 
 Integrating out the channel probabilities, the complete data log-likelihood of the observed ciphertext bigrams and the sampled plaintext bigrams,
 \begin{align*}
-&P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \} \\
+&P( \{ \mathbf{\cipher}^n \mid \mathbf{\plain}^n \}) \\
 &= \prod_{\plain}  \frac{\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}^T  M  v_{\cipher} \} }} {\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}^T  M  v_{\cipher} \}}} \\
 & \prod_{\plain}  \frac{\prod_{\cipher} \dirgamma{\exp \{ v_{\plain}^T  M  v_{\cipher} \} + \#(\plain,\cipher)}} {\dirgamma{\sum_{\cipher} \exp \{ v_{\plain}^T  M  v_{\cipher} \} + \#(\plain)}}.
 \end{align*}
@@ -52,10 +52,10 @@ $\dirdigamma{\cdot}$ is the Digamma function, the derivative of $\log \dirgamma{
 After learning $M$, we can set 
 
 \begin{align}
-\alpha_{\plain,\cipher} &= \sum_{\cipher'} \exp \{ v_{\plain}^T  M  v_{\cipher'} \} \frac{\exp \{ v_{\plain}^T  M  v_{\cipher} \}} {\sum_{\cipher'} \exp \{ v_{\plain}^T  M  v_{\cipher'} \} } \notag \\
+\alpha_{\plain,\cipher} &= \sum_{\cipher'} \exp \{ v_{\plain}^T  M  v_{\cipher'} \} \frac{\exp \{ v_{\plain}^T  M  v_{\cipher} \}} {\sum_{\cipher''} \exp \{ v_{\plain}^T  M  v_{\cipher''} \} } \notag \\
                                     & = \alpha_{\plain} m_{\plain,\cipher} \label{base-concentration}, 
 \end{align}
-where $\alpha_{\plain}$ is the concentration parameter and $m_{\plain,\cipher}$ is an element of the base measure $\mathbf{m}_e$ for plaintext word $e$. In practice, we find that $\alpha_{\plain}$ can be very large, overwhelming the counts from sampling when we only have a few ciphertext bigrams. Therefore, we use $\mathbf{m}_e$ and set $\alpha_{\plain}$ proportional to the data size. 
+where $\alpha_{\plain} = \sum_{\cipher'} \exp \{ v_{\plain}^T  M  v_{\cipher'} \} $ is the concentration parameter and $m_{\plain,\cipher} = \frac{\exp \{ v_{\plain}^T  M  v_{\cipher} \}} {\sum_{\cipher''} \exp \{ v_{\plain}^T  M  v_{\cipher''} \} } $ is an element of the base measure $\mathbf{m}_e$ for plaintext word $e$. In practice, we find that $\alpha_{\plain}$ can be very large, overwhelming the counts from sampling when we only have a few ciphertext bigrams. Therefore, we use $\mathbf{m}_e$ and set $\alpha_{\plain}$ proportional to the data size. 
 
 \iffalse
 we will first derive the complete data log-likelihood for our model and then present the steps of our stochastic EM algorithm. For a particular ciphertext and plaintext bigram, For an english word $\word{e}$, 
