@@ -52,9 +52,9 @@ The remainder of the generative story is the same as the noisy channel model for
 
 where $\#(\plain,\cipher)$ and $\#(\plain,\plain')$ are the counts of the translated word pairs and plaintext bigram pairs in the complete data, and $\dirgamma{\cdot}$ is the Gamma function. Unlike EM, in Bayesian decipherment, we no longer search for parameters $P(\cipher \mid \plain)$ that maximize the likelihood of the observed ciphertext. Instead, we draw samples from posterior distribution of the plaintext sequences given the ciphertext. Under the above Bayesian decipherment model, it turns out  that the probability of a particular cipher word $\cipher_{j}$ having a value $k$, given the current plaintext word $\plain_j$, and  the samples for all the other ciphertext and plaintext words, $\mathbf{\cipher}_{-j}$ and $\mathbf{\plain}_{-j}$, is:
 
-\begin{equation} \label{prob_bayes_ciphertext}
+\begin{equation*} \label{prob_bayes_ciphertext}
 P(\cipher_j = k \mid \plain_j,\mathbf{\cipher}_{-j}, \mathbf{\plain}_{-j}) = \frac{\#(k, \plain_j)_{-j} + \alpha_{\plain_j,k}}{\#(\plain_j)_{-j}+\sum_{\cipher} \alpha_{\plain_j,\cipher}}.
-\end{equation}
+\end{equation*}
 
 Where, $\#(k, \plain_j)_{-j}$ and $\#(\plain_j)_{-j}$ are the counts of the ciphertext, plaintext word pair and plaintext word in the samples excluding $\cipher_j$ and $\plain_j$. Similarly, the probability of a plaintext word $\plain_j$ taking a value $l$ given samples for all other plaintext words, 
 \begin{equation} \label{prob_bayes_plaintext}
