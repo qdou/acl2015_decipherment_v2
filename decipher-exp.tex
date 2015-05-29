@@ -176,7 +176,7 @@ We evaluate accuracy for the 5k and 10k most frequent word types for each langua
 \label{es-en-curve}
 \end{figure}
 
-We also present the learning curves of decipherment accuracy for the 5k most frequent word types. Figure~\ref{es-en-curve} compares the baseline with \textbf{DMRE} in deciphering Spanish into English. Performance of the baseline is in line with previous work \cite{dou-knight:2013:EMNLP}. (The accuracy reported here is higher as we evaluate top-5 accuracy for each word type.) With 100k tokens of Spanish text, the baseline achieves 1.9\% accuracy, while \textbf{DMRE} reaches 12.4\% accuracy, improving the baseline by over 6 times. The improvement holds consistently throughout the experiment. In the end, with 100 million cipher tokens, the baseline achieves 45.8\% accuracy, while \textbf{DMRE} reaches 67.4\% accuracy. 
+We also present the learning curves of decipherment accuracy for the 5k most frequent word types. Figure~\ref{es-en-curve} compares the baseline with \textbf{DMRE} in deciphering Spanish into English. Performance of the baseline is in line with previous work \cite{dou-knight:2013:EMNLP}. (The accuracy reported here is higher as we evaluate top-5 accuracy for each word type.) With 100k tokens of Spanish text, the baseline achieves 1.9\% accuracy, while \textbf{DMRE} reaches 12.4\% accuracy, improving the baseline by over 6 times. Although the gains attenuate as we increase the number of ciphertext tokens, they are still large. With 100 million cipher tokens, the baseline achieves 45.8\% accuracy, while \textbf{DMRE} reaches 67.4\% accuracy. 
 
  \begin{figure}[!ht]
   \centering
